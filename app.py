@@ -12,7 +12,6 @@ def create_app():
 
     db.init_app(app)
 
-
     login_manager = LoginManager()
     login_manager.init_app(app)
     login_manager.login_view = 'auth.login'
@@ -42,7 +41,7 @@ def create_app():
     def admin_js():
         return send_from_directory('sky', 'admin.js')
 
-@app.route('/demo-login')
+    @app.route('/demo-login')
     def demo_login():
         from flask_login import login_user
         from models import Admin
@@ -56,4 +55,14 @@ def create_app():
     def static_proxy(path):
         return send_from_directory('sky', path)
 
+    with app.app_context():
+        db.create_all()
+        # Create demo user if not exists
+        if not Admin.query.filter_by(email='demo@admin.com').first():
+            demo = Admin(full_name='Demo Admin', email='demo@admin.com')
+            demo.set_password('demopass123')
+            db.session.add(demo)
+            db.session.commit()
+
     return app
+
