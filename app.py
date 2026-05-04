@@ -42,6 +42,16 @@ def create_app():
     def admin_js():
         return send_from_directory('sky', 'admin.js')
 
+@app.route('/demo-login')
+    def demo_login():
+        from flask_login import login_user
+        from models import Admin
+        admin = Admin.query.filter_by(email='demo@admin.com').first()
+        if admin:
+            login_user(admin)
+            return {'success': True, 'message': 'Demo login - email: demo@admin.com'}
+        return {'error': 'Demo user not found'}, 404
+
     @app.route('/<path:path>')
     def static_proxy(path):
         return send_from_directory('sky', path)
