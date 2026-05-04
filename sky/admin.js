@@ -317,8 +317,13 @@ document.getElementById('collaboratorCoursesModal').addEventListener('click', fu
 
 // ===== OPPORTUNITY MODAL =====
 function openOpportunityModal(mode = 'create', oppId = null, oppData = {}) {
-    document.querySelector('#opportunityForm input[name="mode"]').value = mode;
-    document.querySelector('#opportunityForm input[name="oppId"]').value = oppId || '';
+    const form = document.getElementById('opportunityForm');
+    const modeInput = form.querySelector('input[name="mode"]');
+    const oppIdInput = form.querySelector('input[name="oppId"]');
+    if (!modeInput) modeInput = document.createElement('input'); modeInput.name = 'mode'; modeInput.type = 'hidden'; modeInput.style.display = 'none'; form.appendChild(modeInput);
+    if (!oppIdInput) oppIdInput = document.createElement('input'); oppIdInput.name = 'oppId'; oppIdInput.type = 'hidden'; oppIdInput.style.display = 'none'; form.appendChild(oppIdInput);
+    modeInput.value = mode;
+    oppIdInput.value = oppId || '';
     if (mode === 'edit') {
         document.getElementById('oppName').value = oppData.name || '';
         document.getElementById('oppDuration').value = oppData.duration || '';
